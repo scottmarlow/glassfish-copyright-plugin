@@ -238,7 +238,7 @@ public abstract class CommonCopyright extends AbstractCopyright {
 	    if (blankLines)
 		out.append(strip(commentPrefix)).append("\n");
 	    String line;
-	    while ((line = r.readLine()) != null)
+	    while ((line = fix(r.readLine())) != null) 
 		out.append(strip(commentPrefix + line)).append('\n');
 	    if (blankLines)
 		out.append(strip(commentPrefix)).append("\n");
@@ -252,5 +252,16 @@ public abstract class CommonCopyright extends AbstractCopyright {
 	    } catch (IOException ex) { }
 	}
 	return out.toString();
+    }
+
+	private String fix(String line) {
+		if (line == null) 
+			return line;
+		for (int i = 0; i < line.length(); i++) {
+			    char c = line.charAt(i);
+			    if (!(Character.isWhitespace(c) || c == '*'))	// skip past leading whitespace + asterisk
+				return line.substring(i, line.length());
+			}
+		return "";  // line was all whitespace/asterisk
     }
 }
